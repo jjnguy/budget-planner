@@ -38,21 +38,27 @@
   }
 
   let currentTab = localStorage.getItem("__budget_planner:tab") || "Spending";
+  function selectTab(tab) {
+    currentTab = tab;
+    localStorage.setItem("__budget_planner:tab", tab);
+  }
 </script>
 
 <main>
   <ul>
-    <li on:click={() => (currentTab = "Spending")}>Spending</li>
-    <li on:click={() => (currentTab = "Income")}>Income</li>
+    <li on:click={() => selectTab("Spending")}>Spending</li>
+    <li on:click={() => selectTab("Income")}>Income</li>
+    <li on:click={() => selectTab("Advanced")}>Advanced</li>
   </ul>
   {#if currentTab == "Spending"}
     <Spending bind:budgetItems={budgetData.expenses} on:spending-saved={save} />
   {:else if currentTab == "Income"}
     <Income bind:income={budgetData.income} />
+  {:else if currentTab == "Advanced"}
+    <button on:click={exportJson}>export</button>
+    <button on:click={importJson}>import</button>
+    <input type="file" bind:files={importData} />
   {/if}
-  <button on:click={exportJson}>export</button>
-  <button on:click={importJson}>import</button>
-  <input type="file" bind:files={importData} />
 </main>
 
 <style lang="less">
