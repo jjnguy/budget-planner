@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { BudgetItemModel } from "../models";
+  import type { ExpenseItemModel } from "../models";
   import RateSelector from "./RateSelector.svelte";
 
-  export let item: BudgetItemModel;
+  export let item: ExpenseItemModel;
 
   let dispatch = createEventDispatcher();
 

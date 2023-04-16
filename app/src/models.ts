@@ -1,14 +1,24 @@
 
-type BudgetItemModel = {
+type BudgetModel = {
+  id: string
+  expenses: Array<ExpenseItemModel>
+  income: Array<IncomeItemModel>
+};
+
+type IncomeItemModel = {
+  id: string
+}
+
+type ExpenseItemModel = {
   id: string
   name: string
-  spending: BudgetItemSpendingModel
+  spending: ExpenseItemSpendingModel
   excludeFromTotal: boolean
 }
 
-type BudgetItemSpendingModel = {
+type ExpenseItemSpendingModel = {
   perMonth: number
   amount: number
 }
 
-export { type BudgetItemModel, type BudgetItemSpendingModel }
+export { type BudgetModel, type ExpenseItemModel, type ExpenseItemSpendingModel }
