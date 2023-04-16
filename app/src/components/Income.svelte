@@ -8,7 +8,7 @@
   let dispatcher = createEventDispatcher();
 
   function save() {
-    dispatcher("spending-saved");
+    dispatcher("income-saved");
   }
 
   let newIncomeName: string;
@@ -39,6 +39,13 @@
 </script>
 
 {JSON.stringify(income)}
+
+<span>Total monthly income</span><span
+  >{income.reduce(
+    (result, next) => result + next.amount.perMonth * next.amount.amount,
+    0
+  )}</span
+>
 
 <form on:submit|preventDefault={addItem}>
   <input bind:value={newIncomeName} />

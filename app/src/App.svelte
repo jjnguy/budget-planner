@@ -9,6 +9,21 @@
   budgetData.id = budgetData.id || crypto.randomUUID();
   budgetData.income = budgetData.income || [];
 
+  $: totalSpending = budgetData.expenses
+    .filter((it) => !it.excludeFromTotal)
+    .reduce(
+      (result, next) => result + next.spending.perMonth * next.spending.amount,
+      0
+    );
+
+  $: totalIncome = budgetData.income.reduce(
+    (result, next) => result + next.amount.perMonth * next.amount.amount,
+    0
+  );
+
+  $: totalDiff = totalIncome - totalSpending;
+  $: isDeficit = totalDiff < 0;
+
   function save() {
     localStorage.setItem(
       "__budget_planner:budget-data",
@@ -44,27 +59,51 @@
   }
 </script>
 
+<h1>Budget Explorer</h1>
 <main>
-  <ul>
-    <li on:click={() => selectTab("Spending")}>Spending</li>
-    <li on:click={() => selectTab("Income")}>Income</li>
-    <li on:click={() => selectTab("Advanced")}>Advanced</li>
-  </ul>
-  {#if currentTab == "Spending"}
-    <Spending bind:budgetItems={budgetData.expenses} on:spending-saved={save} />
-  {:else if currentTab == "Income"}
-    <Income bind:income={budgetData.income} />
-  {:else if currentTab == "Advanced"}
-    <button on:click={exportJson}>export</button>
-    <button on:click={importJson}>import</button>
-    <input type="file" bind:files={importData} />
-  {/if}
+  <section>
+    <h2>Overview</h2>
+    <div>
+      Total spending: ${totalSpending.toFixed(2)}
+    </div>
+    <div>
+      Total income: ${totalIncome.toFixed(2)}
+    </div>
+    <div class:deficit={isDeficit}>
+      {isDeficit ? "Deficit" : "Surlpus"} ${Math.abs(
+        totalIncome - totalSpending
+      ).toFixed(2)}
+    </div>
+  </section>
+  <section>
+    <ul>
+      <li on:click={() => selectTab("Spending")}>Spending</li>
+      <li on:click={() => selectTab("Income")}>Income</li>
+      <li on:click={() => selectTab("Advanced")}>Advanced</li>
+    </ul>
+    {#if currentTab == "Spending"}
+      <Spending
+        bind:budgetItems={budgetData.expenses}
+        on:spending-saved={save}
+      />
+    {:else if currentTab == "Income"}
+      <Income bind:income={budgetData.income} on:income-saved={save} />
+    {:else if currentTab == "Advanced"}
+      <button on:click={exportJson}>export</button>
+      <button on:click={importJson}>import</button>
+      <input type="file" bind:files={importData} />
+    {/if}
+  </section>
 </main>
 
 <style lang="less">
   main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
+    display: flex;
+  }
+
+  div {
+    &.deficit {
+      color: red;
+    }
   }
 </style>

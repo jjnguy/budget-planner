@@ -17,6 +17,10 @@ let rates: Array<MonthlyRate> = [
     name: "Year",
     perMonth: 1 / 12,
   },
+  {
+    name: "Bi-Week",
+    perMonth: 2.15,
+  },
 ]
 
 export { type MonthlyRate, rates };
