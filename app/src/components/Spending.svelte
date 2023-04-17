@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { ExpenseItemModel } from "../models";
+  import type { ExpenseItemModel, ExpensesMode } from "../models";
   import RateSelector from "./RateSelector.svelte";
   import BudgetItem from "./BudgetItem.svelte";
 
@@ -23,6 +23,7 @@
         id: crypto.randomUUID(),
         name: newItemName,
         excludeFromTotal: false,
+        futureMonthlyAmount: newItemSpendingRate * newItemSpending,
         spending: {
           perMonth: newItemSpendingRate,
           amount: newItemSpending,
@@ -51,6 +52,7 @@
           name,
           id: crypto.randomUUID(),
           excludeFromTotal: false,
+          futureMonthlyAmount: perMonth * amount,
           spending: {
             perMonth,
             amount,
@@ -61,8 +63,26 @@
       save();
     }
   }
+
+  let mode: ExpensesMode = "Planning";
 </script>
 
+<label
+  >Actual <input
+    type="radio"
+    name="spending-mode"
+    value="Actual"
+    bind:group={mode}
+  /></label
+>
+<label
+  >Planning <input
+    type="radio"
+    name="spending-mode"
+    value="Planning"
+    bind:group={mode}
+  /></label
+>
 <form on:submit|preventDefault={addItem}>
   <input bind:value={newItemName} on:paste={onPaste} />
   <input bind:value={newItemSpending} type="number" step="any" />
@@ -77,6 +97,7 @@
         on:delete-item={() => deleteItem(item.id)}
         on:save-item={save}
         bind:item
+        {mode}
       />
     </li>
   {/each}
@@ -99,3 +120,6 @@
   <RateSelector bind:value={newItemSpendingRate} />
   <button type="submit">add</button>
 </form>
+
+<style lang="less">
+</style>

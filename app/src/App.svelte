@@ -24,6 +24,13 @@
   $: totalDiff = totalIncome - totalSpending;
   $: isDeficit = totalDiff < 0;
 
+  $: forecastedTotalSpending = budgetData.expenses.reduce(
+    (result, next) => result + next.futureMonthlyAmount,
+    0
+  );
+  $: foracastDiff = totalIncome - forecastedTotalSpending;
+  $: forcastDeficit = foracastDiff < 0;
+
   function save() {
     localStorage.setItem(
       "__budget_planner:budget-data",
@@ -62,7 +69,7 @@
 <h1>Budget Explorer</h1>
 <main>
   <section>
-    <h2>Overview</h2>
+    <h2>Actual Overview</h2>
     <div>
       Total spending: ${totalSpending.toFixed(2)}
     </div>
@@ -72,6 +79,18 @@
     <div class:deficit={isDeficit}>
       {isDeficit ? "Deficit" : "Surlpus"} ${Math.abs(
         totalIncome - totalSpending
+      ).toFixed(2)}
+    </div>
+    <h2>Forecasted Overview</h2>
+    <div>
+      Total spending: ${forecastedTotalSpending.toFixed(2)}
+    </div>
+    <div>
+      Total income: ${totalIncome.toFixed(2)}
+    </div>
+    <div class:deficit={forcastDeficit}>
+      {forcastDeficit ? "Deficit" : "Surlpus"} ${Math.abs(
+        totalIncome - forecastedTotalSpending
       ).toFixed(2)}
     </div>
   </section>

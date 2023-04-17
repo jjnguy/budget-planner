@@ -1,4 +1,6 @@
 
+type ExpensesMode = "Actual" | "Planning";
+
 type BudgetModel = {
   id: string
   expenses: Array<ExpenseItemModel>
@@ -15,6 +17,7 @@ type ExpenseItemModel = {
   id: string
   name: string
   spending: MonthlyEquivalentAmount
+  futureMonthlyAmount: number
   excludeFromTotal: boolean
 }
 
@@ -23,4 +26,4 @@ type MonthlyEquivalentAmount = {
   amount: number
 }
 
-export { type BudgetModel, type ExpenseItemModel, type MonthlyEquivalentAmount, type IncomeItemModel }
+export { type BudgetModel, type ExpenseItemModel, type MonthlyEquivalentAmount, type IncomeItemModel, type ExpensesMode }
